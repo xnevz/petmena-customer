@@ -39,7 +39,7 @@ export default function More(props) {
 
     async function handleLogout() {
         closeDialog();
-        await props.navigation.navigate('Logout');
+        await props.navigation.navigate('logout');
     }
 
     return (

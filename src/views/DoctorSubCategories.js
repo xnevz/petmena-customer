@@ -42,7 +42,7 @@ export default function DoctorSubCategories(props) {
     }, []);
 
     function Doctor_list(data) {
-        props.navigation.navigate('DoctorList', { id: state.id, sub_id: data.id, type: 1 });
+        props.navigation.navigate('doctorList', { id: state.id, sub_id: data.id, type: 1 });
     }
 
     function handleBackButtonClick() {

@@ -33,7 +33,7 @@ function Prescription(props) {
     }
 
     function view_prescription(data) {
-        props.navigation.navigate('ViewPrescription', { data: data });
+        props.navigation.navigate('viewPrescription', { data: data });
     }
 
     async function Prescription() {

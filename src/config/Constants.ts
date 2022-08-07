@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native';
 
 export const settings = "app_setting";
 
-// export const base_url = "http://192.168.0.161:8000";
+// export const base_url = "http://192.168.0.161:5524";
 export const base_url = "https://wecare.rithlaundry.com";
 export const api_url = base_url + "/api/";
 export const img_url = base_url + "/uploads/";
@@ -17,8 +17,8 @@ export const products = "vendor/products";
 export const search_products = "search_products";
 export const related_products = "related_products";
 // TODO
-export const register = "customer?XDEBUG_SESSION_START=native";
-export const login = "customer/login";
+export const register_path = "/customer";
+export const login_path = "/customer/login";
 export const address = "address";
 export const address_list = "address/all";
 export const address_delete = "address/delete";

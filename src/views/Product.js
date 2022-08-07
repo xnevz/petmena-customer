@@ -44,11 +44,11 @@ function Product(props) {
     };
 
     function cart() {
-        props.navigation.navigate("Cart");
+        props.navigation.navigate("cart");
     };
 
     move_product_details = (item) => {
-        props.navigation.navigate("ProductDetails", { data: item, vendor_id: state.data.vendor_id });
+        props.navigation.navigate("productDetails", { data: item, vendor_id: state.data.vendor_id });
     };
 
 

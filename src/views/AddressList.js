@@ -93,7 +93,7 @@ function AddressList(props) {
     function add_address() {
         RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
             .then(data => {
-                props.navigation.navigate('Address', { id: 0 });
+                props.navigation.navigate('address', { id: 0 });
             }).catch(err => {
                 alert('Please enable your location');
             });
@@ -102,7 +102,7 @@ function AddressList(props) {
     edit_address = (id) => {
         RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
             .then(data => {
-                props.navigation.navigate('Address', { id: id });
+                props.navigation.navigate('address', { id: id });
             }).catch(err => {
                 alert('Please enable your location');
             });

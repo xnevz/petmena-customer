@@ -33,7 +33,7 @@ function Faq(props) {
     }
 
     faq_details = (data) => {
-        props.navigation.navigate('FaqDetails', { data: data });
+        props.navigation.navigate('faqDetails', { data: data });
     }
 
     const { isLoding, error, data, message, status } = props

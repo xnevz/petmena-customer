@@ -25,7 +25,7 @@ function ViewPrescription(props) {
     }
 
     function accept_order() {
-        props.navigation.navigate('Payment', { from: 'prescription', prescription_id: state.data.id, prescription_total: state.data.total });
+        props.navigation.navigate('payment', { from: 'prescription', prescription_id: state.data.id, prescription_total: state.data.total });
     }
 
     async function reject_order() {

@@ -131,7 +131,7 @@ export function AddPrescription(props) {
     }
 
     async function prescription_list() {
-        props.navigation.navigate('Prescription');
+        props.navigation.navigate('prescription');
     }
 
     async function make_images() {

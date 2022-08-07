@@ -10,7 +10,7 @@ import { editServiceActionPending, editServiceActionError, editServiceActionSucc
 import ImagePicker from 'react-native-image-picker';
 // import RNFetchBlob from 'react-native-fetch-blob';
 import Snackbar from 'react-native-snackbar';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Input } from 'react-native-elements';
 
 const options = {

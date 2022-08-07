@@ -1,0 +1,2 @@
+- link to terms and conditions in signup page must redirect to the appropriate page.
+- still have to fix registration logic.

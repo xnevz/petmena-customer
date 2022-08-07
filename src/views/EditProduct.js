@@ -23,7 +23,7 @@ function EditProdcut(props) {
     }
 
     function cart() {
-        props.navigation.navigate('Cart');
+        props.navigation.navigate('cart');
     }
 
     add_to_cart = async (qty, product_id, product_name, price, image, description) => {

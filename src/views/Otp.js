@@ -28,7 +28,7 @@ function Otp(props) {
     }
 
     function reset() {
-        props.navigation.navigate("Reset", { id: state.id });
+        props.navigation.navigate("reset", { id: state.id });
     }
 
     const { otp } = props;

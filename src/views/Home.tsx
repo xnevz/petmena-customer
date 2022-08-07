@@ -1,111 +1,114 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native';
-import { Loader } from '../components/GeneralComponents';
-import { img_url, api_url, font_title, font_description, home_details } from '../config/Constants';
+import { StyleSheet, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, ImageBackground, useWindowDimensions } from 'react-native';
+import { img_url, font_title, font_description, home_details } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import axios from 'axios';
-import { Container, Row, Card, Image as Thumbnail, Box } from 'native-base';
+import { ScrollView, Row, Card, Image, View, Box } from 'native-base';
 import { Rating } from 'react-native-ratings';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import { useAppNavigation } from '../../App';
+import { Banner, Category, Doctor, HomeDetailsResponse, Symptom } from '../serverResponses';
+import Background from '../components/Background';
 
-export default function Home(props) {
+export default function Home() {
+    const navigation = useAppNavigation();
+    const [banners, setBanners] = useState<Banner[]>([]);
+    const [category, setCategory] = useState<Category[]>([]);
+    const [symptomsFirst, setSymptomsFirst] = useState<Symptom[]>([]);
+    const [symptomsSecond, setSymptomsSecond] = useState<Symptom[]>([]);
+    const [doctors, setDoctors] = useState<Doctor[]>([]);
 
-    const [state, msetState] = useState({
-        banners: [],
-        category: [],
-        symptoms_first: [],
-        symptoms_second: [],
-        doctors: [],
-        home_result: [],
-        isLoding: false
-    });
-    function setState(mstate) {
-        msetState({ ...state, ...mstate });
-    }
-
+    const wDims = useWindowDimensions();
+    const [carouselIndex, setCarouselIndex] = useState(0);
 
     useEffect(() => {
-        Home_details();
+        fetchHomeDetails();
 
-        const _unsubscribe = props.navigation.addListener('focus', async () => {
-            await Home_details();
-        });
+        //     const _unsubscribe = navigation.addListener('focus', async () => {
+        //         await fetchHomeDetails();
+        //     });
 
-        return _unsubscribe;
-
+        //     return _unsubscribe;
     }, []);
 
-    async function Home_details() {
-        setState({ isLoding: true });
-        await axios({
-            method: "post",
-            url: api_url + home_details,
-        })
-            .then(async (response) => {
-                setState({ isLoding: false });
-                setState({
-                    home_result: response.data.result,
-                    banners: response.data.result.banners,
-                    category: response.data.result.categories,
-                    symptoms_first: response.data.result.symptoms_first,
-                    symptoms_second: response.data.result.symptoms_second,
-                    doctors: response.data.result.doctors
-                })
-            })
-            .catch((error) => {
-                setState({ isLoding: false });
-                alert('Something went wrong');
-            });
+    async function fetchHomeDetails() {
+        // set busy
+        try {
+            const result = await axios.post<HomeDetailsResponse>(home_details);
+            setBanners(result.data.result.banners);
+            setCategory(result.data.result.category);
+            setDoctors(result.data.result.doctors);
+            setSymptomsFirst(result.data.result.symptoms_first);
+            setSymptomsSecond(result.data.result.symptoms_second);
+        } catch (error) {
+
+        }
+
     };
 
-    const category_doctor_list = (id, category_name) => {
-        props.navigation.navigate('DoctorSubCategories', { id: id, type: 1, category_name: category_name });
-    };
-
-    const symptoms_doctor_list = (id) => {
-        props.navigation.navigate('DoctorList', { id: id, type: 2 });
-    };
-
-    function top_doctor_list() {
-        props.navigation.navigate('DoctorList', { id: 0, type: 3 });
+    function goToDoctorsByCategory(id: number, category_name: string) {
+        navigation.navigate('doctorSubCategories', { id, type: 1, category_name });
     }
 
-    const doctor_details = (data) => {
-        props.navigation.navigate('DoctorDetail', { data: data });
-    };
+    function goToDoctorList(id: number, type: number) {
+        navigation.navigate('doctorList', { id, type });
+    }
 
-    const direct_appointment = (data) => {
-        RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+    function goToDoctorDetails(doctor: Doctor) {
+        navigation.navigate('doctorDetail', { doctor });
+    }
+
+    async function direct_appointment() {
+        await RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
             interval: 10000,
             fastInterval: 5000,
-        })
-            .then((data) => {
-                props.navigation.navigate('DoctorMap', { categories: state.category });
-            })
-            .catch((err) => {
+        });
+        navigation.navigate('doctorMap', { categories: category });
+    }
 
-            });
-    };
+    function onCarouselScroll(data: NativeSyntheticEvent<NativeScrollEvent>) {
+        const offset = data.nativeEvent.contentOffset.x;
+        const val = offset / wDims.width;
+
+        const round = Math.round(val);
+        console.log(Math.abs(round - val));
+        
+        if (Math.abs(round - val) > 0.3)
+            return;
+
+        setCarouselIndex(round);
+    }
 
 
     return (
-        <Container style={{ minWidth: '100%' }}>
-            <View style={styles.home_style1}>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    {state.banners?.map((row, index) => (
-                        <ImageBackground key={index} source={{ uri: img_url + row.url }} imageStyle={styles.home_style2} style={styles.home_style3}>
-                        </ImageBackground>
+        <Background>
+
+            <View style={{ paddingTop: 10, flexDirection: 'row' }}>
+                <ScrollView scrollEventThrottle={200} onScroll={onCarouselScroll} decelerationRate='fast' pagingEnabled={true} horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {banners?.map((row, index) => (
+                        <ImageBackground key={index} source={{ uri: img_url + row.url }} imageStyle={styles.home_style2} style={{
+                            width: (wDims.width - 10),
+                            aspectRatio: 2,
+                            borderRadius: 10, margin: 5
+                        }} />
                     ))}
                 </ScrollView>
             </View>
+
+            <Box alignSelf='center' display='flex' flexDirection='row' m={2} backgroundColor='white' rounded='sm' p={1}>
+                {banners?.map((banner, index) => {
+                    return (<Box backgroundColor={index == carouselIndex ? '#0007' : '#0002'} rounded='2xl' width={2} height={2} m={1} />);
+                })}
+            </Box>
+
             <View style={styles.home_style4} />
             <Text style={styles.home_style5}>Categories</Text>
             <View style={styles.home_style6} />
             <View style={styles.home_style7}>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                    {state.category?.map((row, index) => (
-                        <TouchableOpacity key={index} onPress={() => category_doctor_list(row.id, row.category_name)} activeOpacity={1} style={styles.home_style8}>
-                            <Image alt="-" style={styles.home_style9} source={{ uri: img_url + row.category_image }} />
+                    {category?.map((row, index) => (
+                        <TouchableOpacity key={index} onPress={() => goToDoctorsByCategory(row.id, row.category_name)} activeOpacity={1} style={styles.home_style8}>
+                            <Image alt='alt' style={styles.home_style9} source={{ uri: img_url + row.category_image }} />
                             <Text style={styles.home_style10}>{row.category_name}</Text>
                         </TouchableOpacity>
                     ))}
@@ -120,12 +123,12 @@ export default function Home(props) {
             <View style={styles.home_style17} />
             <View style={styles.home_style18}>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                    {state.symptoms_first?.map((row, index) => (
+                    {symptomsFirst?.map((row, index) => (
                         <View key={index}>
                             <Card style={styles.home_style19}>
-                                <TouchableOpacity activeOpacity={1} onPress={() => symptoms_doctor_list(row.id)} >
+                                <TouchableOpacity activeOpacity={1} onPress={() => goToDoctorList(row.id, 2)} >
                                     <View style={styles.home_style20}>
-                                        <Image alt="-" style={styles.home_style21} source={{ uri: img_url + row.service_image }} />
+                                        <Image alt='alt' style={styles.home_style21} source={{ uri: img_url + row.service_image }} />
                                     </View>
                                 </TouchableOpacity>
                             </Card>
@@ -138,12 +141,12 @@ export default function Home(props) {
             <View style={styles.home_style23} />
             <View style={styles.home_style24}>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                    {state.symptoms_second?.map((row, index) => (
+                    {symptomsSecond?.map((row, index) => (
                         <View key={index}>
                             <Card style={styles.home_style25}>
-                                <TouchableOpacity activeOpacity={1} onPress={() => symptoms_doctor_list(row.id)} >
+                                <TouchableOpacity activeOpacity={1} onPress={() => goToDoctorList(row.id, 2)} >
                                     <View style={styles.home_style26}>
-                                        <Image alt="-" style={styles.home_style27} source={{ uri: img_url + row.service_image }} />
+                                        <Image alt='alt' style={styles.home_style27} source={{ uri: img_url + row.service_image }} />
                                     </View>
                                 </TouchableOpacity>
                             </Card>
@@ -159,7 +162,7 @@ export default function Home(props) {
                 </View>
 
                 <View style={styles.home_style32}>
-                    <Text onPress={() => top_doctor_list()} style={styles.home_style33}>
+                    <Text onPress={() => goToDoctorList(0, 3)} style={styles.home_style33}>
                         View All
                     </Text>
                 </View>
@@ -168,10 +171,10 @@ export default function Home(props) {
             <View style={styles.home_style34} />
             <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
                 <View style={styles.home_style35}>
-                    {state.doctors?.map((row, index) => (
+                    {doctors?.map((row, index) => (
                         <Card key={index} style={styles.home_style36}>
-                            <TouchableOpacity activeOpacity={1} onPress={() => doctor_details(row)} style={styles.home_style37}>
-                                <Thumbnail source={{ uri: img_url + row.profile_image }} />
+                            <TouchableOpacity activeOpacity={1} onPress={() => goToDoctorDetails(row)} style={styles.home_style37}>
+                                <Image alt='alt' source={{ uri: img_url + row.profile_image }} />
                                 <View style={styles.home_style38} />
                                 <Text style={styles.home_style39}>{row.doctor_name}</Text>
                                 <View style={styles.home_style40} />
@@ -194,20 +197,12 @@ export default function Home(props) {
             </ScrollView>
 
             <View style={styles.home_style45} />
-
-
-            <Loader visible={state.isLoding} />
-        </Container>
+        </Background>
     );
 }
 
 const styles = StyleSheet.create({
-    home_style1: { paddingTop: 10, flexDirection: 'row' },
     home_style2: { borderRadius: 10 },
-    home_style3: {
-        height: 140, width: 260,
-        borderRadius: 10, marginRight: 10
-    },
     home_style4: { marginTop: 30 },
     home_style5: { fontFamily: font_title, fontSize: 18, color: colors.theme_fg_two, marginLeft: 15 },
     home_style6: { margin: 5 },

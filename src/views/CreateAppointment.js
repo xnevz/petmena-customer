@@ -128,7 +128,7 @@ export default function CreateAppointment(props) {
     }
 
     function my_orders() {
-        props.navigation.navigate('MyOrders');
+        props.navigation.navigate('myOrders');
     }
 
     function showDeliveryDatePicker() {
@@ -159,7 +159,7 @@ export default function CreateAppointment(props) {
     };
 
     function AppointmentList() {
-        props.navigation.navigate('AppointmentDetail');
+        props.navigation.navigate('appointmentDetail');
     }
 
 

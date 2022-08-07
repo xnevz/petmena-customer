@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { height_20, font_description } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 export default function Logout(props) {

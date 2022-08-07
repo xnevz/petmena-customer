@@ -90,7 +90,7 @@ function Cart(props) {
     }
 
     function address_list() {
-        props.navigation.navigate('AddressList');
+        props.navigation.navigate('addressList');
     }
 
     calculate_taxes = (net_total) => {
@@ -108,7 +108,7 @@ function Cart(props) {
 
     function checkout() {
         if (props.delivery_date != undefined) {
-            props.navigation.navigate('Payment', { from: 'cart' });
+            props.navigation.navigate('payment', { from: 'cart' });
         } else {
             showSnackbar('Please choose delivery date');
         }
@@ -139,15 +139,15 @@ function Cart(props) {
     };
 
     function Promo() {
-        props.navigation.navigate('Promo');
+        props.navigation.navigate('promo');
     }
 
     function pharmacy() {
-        props.navigation.navigate('Pharmacy');
+        props.navigation.navigate('pharmacy');
     }
 
     edit_product = (data) => {
-        props.navigation.navigate('EditProduct', { data: data });
+        props.navigation.navigate('editProduct', { data: data });
     }
 
 

@@ -52,7 +52,7 @@ function Forgot(props) {
 
     function otp(id) {
         if (props.status == 1) {
-            props.navigation.navigate("Otp", { id: id });
+            props.navigation.navigate("otp", { id: id });
         } else {
             alert(props.message);
         }

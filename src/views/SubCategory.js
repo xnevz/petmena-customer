@@ -24,7 +24,7 @@ function SubCategory(props) {
     };
 
     function cart() {
-        props.navigation.navigate("Cart");
+        props.navigation.navigate("cart");
     };
 
     async function getSubCategory() {
@@ -48,7 +48,7 @@ function SubCategory(props) {
     };
 
     product = async (item) => {
-        await props.navigation.navigate("Product", { data: item });
+        await props.navigation.navigate("product", { data: item });
     };
 
 

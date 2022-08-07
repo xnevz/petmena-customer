@@ -75,7 +75,7 @@ function Payment(props) {
     async function move_orders() {
         await props.reset();
         await props.productReset();
-        props.navigation.navigate('MyOrders');
+        props.navigation.navigate('myOrders');
     }
 
     place_prescription_order = async (payment_mode) => {

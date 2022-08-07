@@ -30,11 +30,11 @@ function Category(props) {
     };
 
     function search() {
-        props.navigation.navigate("Search", { vendor_id: state.vendor.id });
+        props.navigation.navigate("search", { vendor_id: state.vendor.id });
     };
 
     async function move_prescription() {
-        await props.navigation.navigate("AddPrescription");
+        await props.navigation.navigate("addPrescription");
     };
 
     async function Category() {
@@ -56,7 +56,7 @@ function Category(props) {
     };
 
     move_sub_category = async (item) => {
-        await props.navigation.navigate("SubCategory", { list: item });
+        await props.navigation.navigate("subCategory", { list: item });
     };
 
     const {

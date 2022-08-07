@@ -32,7 +32,7 @@ function ProductDetails(props) {
     }
 
     function cart() {
-        props.navigation.navigate('Cart');
+        props.navigation.navigate('cart');
     }
 
     async function get_related_products() {
@@ -142,7 +142,7 @@ function ProductDetails(props) {
     }
 
     function cart() {
-        props.navigation.navigate('Cart');
+        props.navigation.navigate('cart');
     }
 
 

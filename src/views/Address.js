@@ -242,7 +242,7 @@ function Address(props) {
     }
 
     function search() {
-        props.navigation.navigate('LocationSearch');
+        props.navigation.navigate('locationSearch');
     }
 
 

@@ -103,16 +103,16 @@ function Pharmacy(props) {
 
     move_to_category = async (data) => {
         if (data.online_status == 1) {
-            await props.navigation.navigate("Category", { vendor: data });
+            await props.navigation.navigate("category", { vendor: data });
         }
     };
 
     function select_address() {
-        props.navigation.navigate("AddressList", { from: 'home' });
+        props.navigation.navigate("addressList", { from: 'home' });
     }
 
     move_to_vendor_detail = async (id) => {
-        await props.navigation.navigate("VendorDetails", { id: id });
+        await props.navigation.navigate("vendorDetails", { id: id });
     };
 
 

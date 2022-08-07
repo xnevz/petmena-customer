@@ -26,7 +26,7 @@ export default function Search(props) {
     }
 
     move_product_details = (item) => {
-        props.navigation.navigate('ProductDetails', { data: item, vendor_id: state.vendor_id });
+        props.navigation.navigate('productDetails', { data: item, vendor_id: state.vendor_id });
     }
 
     updateSearch = async (search) => {

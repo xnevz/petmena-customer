@@ -1,4 +1,4 @@
-import * as Actions from '../actions/ActionTypes'
+import * as Actions from '../actions/ActionTypes';
 const SplashReducer = (state = { isLoding: false, error: undefined, data: undefined, message: undefined, status: undefined }, action) => {
     switch (action.type) {
         case Actions.SETTING_SERVICE_PENDING:
@@ -29,6 +29,6 @@ const SplashReducer = (state = { isLoding: false, error: undefined, data: undefi
         default:
             return state;
     }
-}
+};
 
 export default SplashReducer;

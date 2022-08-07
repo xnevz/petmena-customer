@@ -21,9 +21,9 @@ export default function App(props) {
 
     appoinment_details = (type) => {
         if (type == 1) {
-            props.navigation.navigate('CreateAppointment', { id: state.data.id, price_per_conversation: state.data.booking_settings.online_booking_fee, type: type });
+            props.navigation.navigate('createAppointment', { id: state.data.id, price_per_conversation: state.data.booking_settings.online_booking_fee, type: type });
         } else {
-            props.navigation.navigate('CreateAppointment', { id: state.data.id, price_per_conversation: state.data.booking_settings.direct_appointment_fee, type: type });
+            props.navigation.navigate('createAppointment', { id: state.data.id, price_per_conversation: state.data.booking_settings.direct_appointment_fee, type: type });
         }
     }
 

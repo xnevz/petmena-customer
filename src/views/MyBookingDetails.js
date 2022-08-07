@@ -63,11 +63,11 @@ export default function MyBookingDetails(props) {
 
 
     function chat() {
-        props.navigation.navigate('Chat', { data: state.data });
+        props.navigation.navigate('chat', { data: state.data });
     }
 
     function video() {
-        props.navigation.navigate('VideoCall', { booking_id: state.data.booking_id });
+        props.navigation.navigate('videoCall', { booking_id: state.data.booking_id });
     }
 
     return (

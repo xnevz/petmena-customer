@@ -106,7 +106,7 @@ export default function DoctorList(props) {
 
 
     function doctor_details(data) {
-        props.navigation.navigate('DoctorDetail', { data: data });
+        props.navigation.navigate('doctorDetail', { data: data });
     }
 
     function handleBackButtonClick() {

@@ -42,11 +42,11 @@ function MyOrders(props) {
     }
 
     myorders_details = (data) => {
-        props.navigation.navigate('OrderDetails', { data: data });
+        props.navigation.navigate('orderDetails', { data: data });
     }
 
     mybooking_details = (data) => {
-        props.navigation.navigate('MyBookingDetails', { data: data });
+        props.navigation.navigate('myBookingDetails', { data: data });
     }
 
     async function my_orders() {
@@ -74,7 +74,7 @@ function MyOrders(props) {
     }
 
     update_rating = (data) => {
-        props.navigation.navigate('Rating', { data: data });
+        props.navigation.navigate('rating', { data: data });
     }
 
     function get_status(booking_status, booking_request_status, booking_status_name, booking_request_status_name) {
