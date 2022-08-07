@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "863989816389",
+    "project_id": "petmena-customer",
+    "storage_bucket": "petmena-customer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863989816389:android:90bb06fcd4ea0b23e4172c",
+        "android_client_info": {
+          "package_name": "com.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863989816389-tp29i171b41ko6fcapku035m67kddcjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg21rOxlW3sBejRWPt8U7CyqNT_-0Qo4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863989816389-tp29i171b41ko6fcapku035m67kddcjr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
