@@ -111,8 +111,8 @@ function MyTabs() {
                 options={{
                     title: 'Pharmacy',
                     tabBarLabel: 'Pharmacy',
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name='ios-medkit' color={color} size={size} />
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Icon name='ios-medkit' color={focused ? 'gold' : color} size={size} />
                     ),
                 }}
             />
@@ -122,8 +122,8 @@ function MyTabs() {
                 options={{
                     title: 'My Orders',
                     tabBarLabel: 'MyOrders',
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name='ios-list' color={color} size={size} />
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Icon name='ios-list' color={focused ? 'gold' : color} size={size} />
                     ),
                 }}
             />
@@ -133,8 +133,8 @@ function MyTabs() {
                 options={{
                     title: 'Prescription',
                     tabBarLabel: 'Prescription',
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name='ios-document' color={color} size={size} />
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Icon name='ios-document' color={focused ? 'gold' : color} size={size} />
                     ),
                 }}
             />
@@ -144,8 +144,8 @@ function MyTabs() {
                 options={{
                     title: 'More',
                     tabBarLabel: 'More',
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name='ios-list' color={color} size={size} />
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Icon name='ios-list' color={focused ? 'gold' : color} size={size} />
                     ),
                 }}
             />
@@ -180,6 +180,8 @@ function App() {
                     <AppNavigator.Screen name="doctorList" component={DoctorList} />
                     <AppNavigator.Screen name="doctorDetail" component={DoctorDetail} />
                     <AppNavigator.Screen name="appointmentDetail" component={AppointmentDetail} />
+                    
+                    <AppNavigator.Screen name="productDetails" component={ProductDetails} />
 
                     {/* 
                     <AppNavigator.Screen name="addPrescription" component={AddPrescription} />
@@ -203,7 +205,6 @@ function App() {
                     <AppNavigator.Screen name="payment" component={Payment} />
                     <AppNavigator.Screen name="privacyPolicy" component={PrivacyPolicy} />
                     <AppNavigator.Screen name="product" component={Product} />
-                    <AppNavigator.Screen name="productDetails" component={ProductDetails} />
                     <AppNavigator.Screen name="promo" component={Promo} />
                     <AppNavigator.Screen name="reset" component={Reset} />
                     <AppNavigator.Screen name="wallet" component={Wallet} />

@@ -47,7 +47,7 @@ function SubCategory(props) {
             });
     };
 
-    product = async (item) => {
+    const product = async (item) => {
         await props.navigation.navigate("product", { data: item });
     };
 
