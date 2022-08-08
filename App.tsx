@@ -65,6 +65,11 @@ import DoctorProfile from './src/views/DoctorProfile';
 import Coaches from './src/views/Coaches';
 import Trainings from './src/views/Trainings';
 import TrainingsDetails from './src/views/TrainingsDetails';
+import AppointmentsList from './src/views/AppointmentsList';
+import MyAppointmentsList from './src/views/MyAppointmentsList';
+import ForgotPassword from './src/views/ForgotPassword';
+import PasswordReset from './src/views/PasswordReset';
+import ConfirmNumber from './src/views/ConfirmNumber';
 
 export const AppNavigator = createStackNavigator();
 export const useAppNavigation = () =>
@@ -185,7 +190,7 @@ function App() {
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
         <AppNavigator.Navigator
-          initialRouteName="payment"
+          initialRouteName="confirm_number"
           screenOptions={{
             header: props => <Header headerProps={props} />,
             headerMode: 'screen',
@@ -308,6 +313,37 @@ function App() {
             name="payment"
             component={Payment}
             options={{headerShown: false}}
+          />
+          <AppNavigator.Screen
+            name="appointments_list"
+            component={AppointmentsList}
+            options={{headerShown: false}}
+          />
+          <AppNavigator.Screen
+            name="my_appointments_list"
+            component={MyAppointmentsList}
+            options={{headerShown: false}}
+          />
+          <AppNavigator.Screen
+            name="forgot_password"
+            component={ForgotPassword}
+            options={{
+              title: 'FORGOT PASSWORD',
+            }}
+          />
+          <AppNavigator.Screen
+            name="password_reset"
+            component={PasswordReset}
+            options={{
+              title: 'PASSWORD RESET',
+            }}
+          />
+          <AppNavigator.Screen
+            name="confirm_number"
+            component={ConfirmNumber}
+            options={{
+              title: 'CONFIRM NUMBER',
+            }}
           />
           {/* <AppNavigator.Screen name="category" component={Category} />
                     <AppNavigator.Screen name="vendorDetails" component={VendorDetails} />
