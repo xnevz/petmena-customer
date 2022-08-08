@@ -49,7 +49,7 @@ import AppointmentDetail from './src/views/AppointmentDetail';
 import CreateAppointment from './src/views/CreateAppointment';
 import MyBookingDetails from './src/views/MyBookingDetails';
 import Chat from './src/views/Chat';
-import { NativeBaseProvider } from 'native-base';
+import { NativeBaseProvider, View } from 'native-base';
 import Home from './src/views/Home';
 import Header from './src/components/Header';
 import { theme } from './src/assets/css/theme';
@@ -57,6 +57,7 @@ import { NavigatorRouteTypes } from './src/routing/NavigatorRouteTypes';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { api_url } from './src/config/Constants';
+import BottomBar from './src/components/BottomBar';
 
 
 export const AppNavigator = createStackNavigator();
@@ -87,6 +88,10 @@ function MyTabs() {
     return (
         <Tab.Navigator
             initialRouteName="Home"
+            sceneContainerStyle={{
+                backgroundColor: 'transparent',
+            }}
+            tabBar={(props) => <BottomBar {...props} />}
             screenOptions={{
                 headerShown: false
             }}>
@@ -94,9 +99,9 @@ function MyTabs() {
                 name="Home"
                 component={Home}
                 options={{
-                    tabBarLabel: 'Home',
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name='ios-home' color={color} size={size} />
+                    title: 'Home',
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Icon name='ios-home' color={focused ? 'gold' : color} size={size} />
                     ),
                 }}
             />
@@ -104,6 +109,7 @@ function MyTabs() {
                 name="Pharmacy"
                 component={Pharmacy}
                 options={{
+                    title: 'Pharmacy',
                     tabBarLabel: 'Pharmacy',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name='ios-medkit' color={color} size={size} />
@@ -114,6 +120,7 @@ function MyTabs() {
                 name="MyOrders"
                 component={MyOrders}
                 options={{
+                    title: 'My Orders',
                     tabBarLabel: 'MyOrders',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name='ios-list' color={color} size={size} />
@@ -124,6 +131,7 @@ function MyTabs() {
                 name="Prescription"
                 component={Prescription}
                 options={{
+                    title: 'Prescription',
                     tabBarLabel: 'Prescription',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name='ios-document' color={color} size={size} />
@@ -134,6 +142,7 @@ function MyTabs() {
                 name="More"
                 component={More}
                 options={{
+                    title: 'More',
                     tabBarLabel: 'More',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name='ios-list' color={color} size={size} />
@@ -161,13 +170,13 @@ function App() {
                     <AppNavigator.Screen name="register" component={Register} options={{
                         title: 'Signup'
                     }} />
-                    
+
                     <AppNavigator.Screen name="homeScreen" component={MyTabs} options={{
                         title: 'Home'
                     }} />
 
                     {/* doctor */}
-                    <AppNavigator.Screen name="doctorSubCategories" component={DoctorSubCategories} /> 
+                    <AppNavigator.Screen name="doctorSubCategories" component={DoctorSubCategories} />
                     <AppNavigator.Screen name="doctorList" component={DoctorList} />
                     <AppNavigator.Screen name="doctorDetail" component={DoctorDetail} />
                     <AppNavigator.Screen name="appointmentDetail" component={AppointmentDetail} />

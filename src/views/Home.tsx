@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, ImageBackground, useWindowDimensions } from 'react-native';
-import { img_url, font_title, font_description, home_details } from '../config/Constants';
-import * as colors from '../assets/css/Colors';
 import axios from 'axios';
-import { ScrollView, Row, Card, Image, View, Box } from 'native-base';
-import { Rating } from 'react-native-ratings';
+import { Box, Button, Flex, Image, ScrollView, Text, View } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, useWindowDimensions } from 'react-native';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { useAppNavigation } from '../../App';
-import { Banner, Category, Doctor, HomeDetailsResponse, Symptom } from '../serverResponses';
+import * as colors from '../assets/css/Colors';
 import Background from '../components/Background';
+import { font_description, font_title, home_details, img_url } from '../config/Constants';
+import { Banner, Category, Doctor, HomeDetailsResponse, Symptom } from '../serverResponses';
+import ButtonImage from '../assets/css/tabBarButton.svg';
+import AppointmentAbstract from '../components/AppointmentAbstract';
+import dogFood from '../assets/img/dogFood.png';
+import dogContract from '../assets/img/dogContract.png';
 
 export default function Home() {
     const navigation = useAppNavigation();
@@ -23,12 +26,6 @@ export default function Home() {
 
     useEffect(() => {
         fetchHomeDetails();
-
-        //     const _unsubscribe = navigation.addListener('focus', async () => {
-        //         await fetchHomeDetails();
-        //     });
-
-        //     return _unsubscribe;
     }, []);
 
     async function fetchHomeDetails() {
@@ -36,7 +33,7 @@ export default function Home() {
         try {
             const result = await axios.post<HomeDetailsResponse>(home_details);
             setBanners(result.data.result.banners);
-            setCategory(result.data.result.category);
+            setCategory(result.data.result.categories);
             setDoctors(result.data.result.doctors);
             setSymptomsFirst(result.data.result.symptoms_first);
             setSymptomsSecond(result.data.result.symptoms_second);
@@ -69,11 +66,9 @@ export default function Home() {
     function onCarouselScroll(data: NativeSyntheticEvent<NativeScrollEvent>) {
         const offset = data.nativeEvent.contentOffset.x;
         const val = offset / wDims.width;
-
         const round = Math.round(val);
-        console.log(Math.abs(round - val));
-        
-        if (Math.abs(round - val) > 0.3)
+
+        if (Math.abs(round - val) > 0.001)
             return;
 
         setCarouselIndex(round);
@@ -83,11 +78,17 @@ export default function Home() {
     return (
         <Background>
 
-            <View style={{ paddingTop: 10, flexDirection: 'row' }}>
-                <ScrollView scrollEventThrottle={200} onScroll={onCarouselScroll} decelerationRate='fast' pagingEnabled={true} horizontal={true} showsHorizontalScrollIndicator={false}>
+            {/* carousel */}
+            <View style={{ flexDirection: 'row' }}>
+                <ScrollView mx={5} scrollEventThrottle={200}
+                    onScroll={onCarouselScroll}
+                    decelerationRate={0.001}
+                    pagingEnabled={true}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}>
                     {banners?.map((row, index) => (
                         <ImageBackground key={index} source={{ uri: img_url + row.url }} imageStyle={styles.home_style2} style={{
-                            width: (wDims.width - 10),
+                            width: (wDims.width - 50),
                             aspectRatio: 2,
                             borderRadius: 10, margin: 5
                         }} />
@@ -95,108 +96,54 @@ export default function Home() {
                 </ScrollView>
             </View>
 
+            {/* carousel dots */}
             <Box alignSelf='center' display='flex' flexDirection='row' m={2} backgroundColor='white' rounded='sm' p={1}>
                 {banners?.map((banner, index) => {
-                    return (<Box backgroundColor={index == carouselIndex ? '#0007' : '#0002'} rounded='2xl' width={2} height={2} m={1} />);
+                    return (<Box key={index} style={{ backgroundColor: (index == carouselIndex ? '#0007' : '#0002') }} rounded='2xl' width={2} height={2} m={1} />);
                 })}
             </Box>
 
-            <View style={styles.home_style4} />
-            <Text style={styles.home_style5}>Categories</Text>
-            <View style={styles.home_style6} />
-            <View style={styles.home_style7}>
-                <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                    {category?.map((row, index) => (
-                        <TouchableOpacity key={index} onPress={() => goToDoctorsByCategory(row.id, row.category_name)} activeOpacity={1} style={styles.home_style8}>
-                            <Image alt='alt' style={styles.home_style9} source={{ uri: img_url + row.category_image }} />
-                            <Text style={styles.home_style10}>{row.category_name}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
+            <Text textTransform='uppercase' mt={2} fontSize='2xl' alignSelf='center'>Choose your need</Text>
+            
+            {/* big buttons */}
+            <Flex direction='row' mx={10} mb={-60} mt={-3} zIndex={1}>
+                <Button shadow='9' px={30} rounded='2xl' m={0} py={7} p={0} flex={1}>
+                    <Flex align='center'>
+                        <Image source={dogFood} mb={5} />
+                        <Text fontSize='lg' color={colors.primary} textTransform='uppercase' fontWeight='bold'>Doctors</Text>
+                    </Flex>
+                </Button>
+                <Button shadow='9' px={30} rounded='2xl' m={0} py={0} flex={1} bg='gold' ml={10}>
+                    <Flex align='center'>
+                        <Image source={dogContract} mb={5} />
+                        <Text fontSize='lg' textTransform='uppercase' color={colors.primary} fontWeight='bold'>Training</Text>
+                    </Flex>
+                </Button>
+            </Flex>
+
+            {/* appointment list */}
+            <View style={{
+                backgroundColor: '#fff',
+                borderTopRightRadius: 50,
+                flex: 1,
+                paddingBottom: 90
+            }}>
+                {/* actual list */}
+                <Flex direction='row' mx={5} mb={2} mt={50}>
+                    <Text color={colors.primary} fontWeight='light' flex={1} textTransform='uppercase'>Appointment List</Text>
+                    <Text color={colors.primary} fontWeight='light' alignSelf='flex-end' textTransform='uppercase'>See all</Text>
+                </Flex>
+                <View>
+                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
+                    <AppointmentAbstract name='Appointment' description='With doctor maotazWith doctor maotazWith doctor maotaz' />
+                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
+                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
+                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
+                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
+                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
+                </View>
             </View>
-            <View style={styles.home_style14} />
-            <Row>
-                <View style={styles.home_style15}>
-                    <Text style={styles.home_style16}>Common Symptoms</Text>
-                </View>
-            </Row>
-            <View style={styles.home_style17} />
-            <View style={styles.home_style18}>
-                <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                    {symptomsFirst?.map((row, index) => (
-                        <View key={index}>
-                            <Card style={styles.home_style19}>
-                                <TouchableOpacity activeOpacity={1} onPress={() => goToDoctorList(row.id, 2)} >
-                                    <View style={styles.home_style20}>
-                                        <Image alt='alt' style={styles.home_style21} source={{ uri: img_url + row.service_image }} />
-                                    </View>
-                                </TouchableOpacity>
-                            </Card>
-                            <Text style={styles.home_style22}>{row.service_name}</Text>
-                        </View>
 
-                    ))}
-                </ScrollView>
-            </View>
-            <View style={styles.home_style23} />
-            <View style={styles.home_style24}>
-                <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                    {symptomsSecond?.map((row, index) => (
-                        <View key={index}>
-                            <Card style={styles.home_style25}>
-                                <TouchableOpacity activeOpacity={1} onPress={() => goToDoctorList(row.id, 2)} >
-                                    <View style={styles.home_style26}>
-                                        <Image alt='alt' style={styles.home_style27} source={{ uri: img_url + row.service_image }} />
-                                    </View>
-                                </TouchableOpacity>
-                            </Card>
-                            <Text style={styles.home_style28}>{row.service_name}</Text>
-                        </View>
-                    ))}
-                </ScrollView>
-            </View>
-            <View style={styles.home_style29} />
-            <Row>
-                <View style={styles.home_style30}>
-                    <Text style={styles.home_style31}>Top Doctors</Text>
-                </View>
-
-                <View style={styles.home_style32}>
-                    <Text onPress={() => goToDoctorList(0, 3)} style={styles.home_style33}>
-                        View All
-                    </Text>
-                </View>
-            </Row>
-
-            <View style={styles.home_style34} />
-            <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-                <View style={styles.home_style35}>
-                    {doctors?.map((row, index) => (
-                        <Card key={index} style={styles.home_style36}>
-                            <TouchableOpacity activeOpacity={1} onPress={() => goToDoctorDetails(row)} style={styles.home_style37}>
-                                <Image alt='alt' source={{ uri: img_url + row.profile_image }} />
-                                <View style={styles.home_style38} />
-                                <Text style={styles.home_style39}>{row.doctor_name}</Text>
-                                <View style={styles.home_style40} />
-                                <Text style={styles.home_style41}>Specialist : {row.specialist}</Text>
-                                <View style={styles.home_style42} />
-                                {row.overall_rating > 0 &&
-                                    <Rating
-                                        ratingCount={5}
-                                        startingValue={row.overall_rating}
-                                        imageSize={12}
-                                        readonly={true}
-                                    />
-                                }
-                                <View style={styles.home_style43} />
-                                <Text style={styles.home_style44}>View Profile</Text>
-                            </TouchableOpacity>
-                        </Card>
-                    ))}
-                </View>
-            </ScrollView>
-
-            <View style={styles.home_style45} />
         </Background>
     );
 }

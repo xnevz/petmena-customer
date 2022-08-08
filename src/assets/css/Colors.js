@@ -16,5 +16,5 @@ export const green = "green";
 export const theme_fg_yellow = "#eb9e3e";
 export const theme_opactiy_bg = "#5d5953b8";
 
-export const primary = '#38022B';
+export const primary = '#3E0F33';
 export const font_color = '#fff';
