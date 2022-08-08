@@ -49,30 +49,22 @@ import AppointmentDetail from './src/views/AppointmentDetail';
 import CreateAppointment from './src/views/CreateAppointment';
 import MyBookingDetails from './src/views/MyBookingDetails';
 import Chat from './src/views/Chat';
-<<<<<<< HEAD
-import {NativeBaseProvider} from 'native-base';
-=======
 import { NativeBaseProvider, View } from 'native-base';
->>>>>>> b38dedd4892ca9a9c7ef0605cd99fafb6be369b0
 import Home from './src/views/Home';
 import Header from './src/components/Header';
 import {theme} from './src/assets/css/theme';
 import {NavigatorRouteTypes} from './src/routing/NavigatorRouteTypes';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-<<<<<<< HEAD
-import {api_url} from './src/config/Constants';
+import { api_url } from './src/config/Constants';
+import BottomBar from './src/components/BottomBar';
 import PetsList from './src/views/PetsList';
 import AddPet from './src/views/AddPet';
 import Doctors from './src/views/Doctors';
+import DoctorProfile from './src/views/DoctorProfile';
 import Coaches from './src/views/Coaches';
 import Trainings from './src/views/Trainings';
-import DoctorProfile from './src/views/DoctorProfile';
-=======
-import { api_url } from './src/config/Constants';
-import BottomBar from './src/components/BottomBar';
 
->>>>>>> b38dedd4892ca9a9c7ef0605cd99fafb6be369b0
 
 export const AppNavigator = createStackNavigator();
 export const useAppNavigation = () =>
@@ -100,66 +92,6 @@ declare global {
 axios.defaults.baseURL = api_url;
 
 function MyTabs() {
-<<<<<<< HEAD
-  return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({color, size}) => (
-            <Icon name="ios-home" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Pharmacy"
-        component={Pharmacy}
-        options={{
-          tabBarLabel: 'Pharmacy',
-          tabBarIcon: ({color, size}) => (
-            <Icon name="ios-medkit" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="MyOrders"
-        component={MyOrders}
-        options={{
-          tabBarLabel: 'MyOrders',
-          tabBarIcon: ({color, size}) => (
-            <Icon name="ios-list" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Prescription"
-        component={Prescription}
-        options={{
-          tabBarLabel: 'Prescription',
-          tabBarIcon: ({color, size}) => (
-            <Icon name="ios-document" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="More"
-        component={More}
-        options={{
-          tabBarLabel: 'More',
-          tabBarIcon: ({color, size}) => (
-            <Icon name="ios-list" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-=======
     return (
         <Tab.Navigator
             initialRouteName="Home"
@@ -226,61 +158,9 @@ function MyTabs() {
             />
         </Tab.Navigator>
     );
->>>>>>> b38dedd4892ca9a9c7ef0605cd99fafb6be369b0
 }
 
 function App() {
-<<<<<<< HEAD
-  return (
-    <NativeBaseProvider theme={theme}>
-      <NavigationContainer>
-        <AppNavigator.Navigator
-          initialRouteName="doctors"
-          screenOptions={{
-            header: props => <Header headerProps={props} />,
-            headerMode: 'screen',
-            headerTransparent: true,
-          }}>
-          <AppNavigator.Screen
-            options={{headerShown: false}}
-            name="splash"
-            component={Splash}
-          />
-          <AppNavigator.Screen
-            name="login"
-            options={{
-              title: 'Login',
-            }}
-            component={Login}
-          />
-          <AppNavigator.Screen
-            name="register"
-            component={Register}
-            options={{
-              title: 'Signup',
-            }}
-          />
-
-          <AppNavigator.Screen
-            name="homeScreen"
-            component={MyTabs}
-            options={{
-              title: 'Home',
-            }}
-          />
-
-          {/* doctor */}
-          <AppNavigator.Screen
-            name="doctorSubCategories"
-            component={DoctorSubCategories}
-          />
-          <AppNavigator.Screen name="doctorList" component={DoctorList} />
-          <AppNavigator.Screen name="doctorDetail" component={DoctorDetail} />
-          <AppNavigator.Screen
-            name="appointmentDetail"
-            component={AppointmentDetail}
-          />
-=======
     return (
         <NativeBaseProvider theme={theme}>
             <NavigationContainer>
@@ -308,7 +188,6 @@ function App() {
                     <AppNavigator.Screen name="appointmentDetail" component={AppointmentDetail} />
                     
                     <AppNavigator.Screen name="productDetails" component={ProductDetails} />
->>>>>>> b38dedd4892ca9a9c7ef0605cd99fafb6be369b0
 
           {/* 
                     <AppNavigator.Screen name="addPrescription" component={AddPrescription} />
