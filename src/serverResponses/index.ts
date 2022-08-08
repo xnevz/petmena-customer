@@ -32,7 +32,7 @@ export interface Banner {
 export interface HomeDetailsResponse {
     result: {
         banners: Banner[],
-        category: Category[],
+        categories: Category[],
         symptoms_first: Symptom[],
         symptoms_second: Symptom[],
         doctors: Doctor[];
