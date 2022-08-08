@@ -1,20 +1,20 @@
-
-export const theme_bg_dark = "#1065cd";
-export const theme_bg = "#1065cd";
-export const theme_fg = "#1065cd";
-export const theme_light = "#c9ddf5";
-export const theme_fg_two = "#202028";
-export const theme_bg_three = "#FFFFFF";
-export const theme_fg_three = "#FFFFFF";
-export const theme_fg_four = "#a4a9b7";
-export const promo_color = "#4dad4a";
-export const black_layer = "rgba(0, 0, 0, 0.5)"; 
-export const grey = "#808080";
-export const light_grey = "#CDCDCD";
-export const red = "#ff471a";
-export const green = "green";
-export const theme_fg_yellow = "#eb9e3e";
-export const theme_opactiy_bg = "#5d5953b8";
+export const theme_bg_dark = '#3d0d33';
+export const theme_bg = '#3d0d33';
+export const theme_fg = '#1065cd';
+export const theme_light = '#c9ddf5';
+export const theme_fg_two = '#202028';
+export const theme_bg_three = '#FFFFFF';
+export const theme_fg_three = '#FFFFFF';
+export const theme_fg_four = '#a4a9b7';
+export const promo_color = '#4dad4a';
+export const black_layer = 'rgba(0, 0, 0, 0.5)';
+export const grey = '#808080';
+export const light_grey = '#CDCDCD';
+export const red = '#ff471a';
+export const green = 'green';
+export const theme_fg_yellow = '#F6C719';
+export const theme_yellow = '#F6C719';
+export const theme_opactiy_bg = '#5d5953b8';
 
 export const primary = '#38022B';
 export const font_color = '#fff';
