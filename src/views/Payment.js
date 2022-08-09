@@ -1,234 +1,250 @@
-import React, { Component, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Container, Icon, } from 'native-base';
-import { api_url, place_order, order_generation, get_payment_list, font_title } from '../config/Constants';
-import * as colors from '../assets/css/Colors';
-import { Loader } from '../components/GeneralComponents';
-import axios from 'axios';
-import { connect } from 'react-redux';
-import { orderServicePending, orderServiceError, orderServiceSuccess, paymentListPending, paymentListError, paymentListSuccess } from '../actions/PaymentActions';
-import { reset } from '../actions/CartActions';
-import { productReset } from '../actions/ProductActions';
-import RazorpayCheckout from 'react-native-razorpay';
+import {StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Box,
+  Button,
+  Center,
+  Checkbox,
+  CheckIcon,
+  Flex,
+  Input,
+  Select,
+  Text,
+  ScrollView,
+} from 'native-base';
+import PageHeader from '../components/PageHeader';
+import {useCheck} from '../customHooks/uiHooks';
 
-function Payment(props) {
-    const [state, msetState] = useState({
-        from: props.route.params.from,
-        prescription_id: props.route.params.prescription_id,
-        prescription_total: props.route.params.prescription_total,
-        isLoding: false
-    });
-    function setState(mstate) {
-        msetState({ ...state, ...mstate });
-    }
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
 
+export default function Payment() {
+  const [cardType, setCardType] = useState('VISA');
+  const [paymentSent, setPaymentSent] = useState(false);
+  const accept_terms = useCheck();
 
-    function handleBackButtonClick() {
-        props.navigation.goBack(null);
-    }
+  // payment sent component
+  if (paymentSent) return <PaymentSent setPaymentSent={setPaymentSent} />;
 
-    async function get_payment_modes() {
-        setState({ isLoding: true });
-        props.paymentListPending();
-        await axios({
-            method: 'get',
-            url: api_url + get_payment_list
-        })
-            .then(async response => {
-                setState({ isLoding: false });
-                await props.paymentListSuccess(response.data);
-            })
-            .catch(error => {
-                setState({ isLoding: false });
-                props.paymentListError(error);
-            });
-    }
+  return (
+    <Box flex={1} bg="gray.50">
+      {/* header */}
+      <PageHeader
+        label="PAYMENT"
+        iconColor="#000"
+        textColor="#000"
+        onBackPress={() => navigation.goBack()}
+      />
+      {/* details */}
+      <Box px="20px" flex={1}>
+        {/* infos */}
+        <Box mt="20px">
+          <Text color="black" fontSize="md">
+            Credit card information
+          </Text>
+          <Text color="#777777" fontSize="sm">
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr
+          </Text>
+        </Box>
 
-    useEffect(() => {
-        get_payment_modes();
-    }, []);
+        {/* card details */}
+        <Box mt="30px" flex={1}>
+          <ScrollView flex={1}>
+            <Flex direction="row" align="center" justify="space-between">
+              {/* visa type */}
+              <Box flex={1}>
+                <Text color="gray.500" ml="10px" mb="5px">
+                  Credit Card Type
+                </Text>
+                <Select
+                  selectedValue={cardType}
+                  marginTop={0}
+                  borderColor="gray.200"
+                  borderWidth={1.5}
+                  accessibilityLabel="Sex"
+                  placeholder="VISA"
+                  _selectedItem={{
+                    bg: 'gray.200',
+                    borderRadius: 20,
+                    endIcon: <CheckIcon size="5" />,
+                  }}
+                  size="xl"
+                  color="gray.600"
+                  borderRadius={10}
+                  onValueChange={v => setCardType(v)}>
+                  <Select.Item label="VISA" value="VISA" />
+                  <Select.Item label="MASTERCARD" value="MASTERCARD" />
+                </Select>
+              </Box>
+              {/* Expire date */}
+              <CustomInput
+                placeholder="05/22"
+                label="Expire Date"
+                w="1/4"
+                ml="5px"
+              />
+              {/* CCV */}
+              <CustomInput placeholder="CCV" w="1/4" ml="5px" />
+            </Flex>
+            {/* card number */}
+            <Box mt="10px">
+              <CustomInput
+                placeholder="2632-3856-4961-4956"
+                w="full"
+                label="Card Number"
+              />
+            </Box>
+            {/* name */}
+            <Box mt="10px">
+              <CustomInput
+                placeholder="Khaled Japri"
+                w="full"
+                label="Name On Card"
+              />
+            </Box>
 
-    place_order = async (payment_mode) => {
-        setState({ isLoding: true });
-        console.log({ customer_id: global.id, expected_delivery_date: props.delivery_date, vendor_id: props.current_vendor, payment_mode: payment_mode, delivery_charge: props.delivery_charge, tax: props.tax, total: props.total, discount: props.discount, sub_total: props.sub_total, promo_id: props.promo_id, items: JSON.stringify(Object.values(props.items)) });
-        props.orderServicePending();
-        await axios({
-            method: 'post',
-            url: api_url + place_order,
-            data: { customer_id: global.id, expected_delivery_date: props.delivery_date, vendor_id: props.current_vendor, payment_mode: payment_mode, delivery_charge: props.delivery_charge, tax: props.tax, total: props.total, discount: props.discount, sub_total: props.sub_total, promo_id: props.promo_id, items: JSON.stringify(Object.values(props.items)) }
-        })
-            .then(async response => {
-                setState({ isLoding: false });
-                await props.orderServiceSuccess(response.data);
-                if (response.data.status == 1) {
-                    await move_orders();
-                } else {
-                    alert(response.data.message);
-                }
-            })
-            .catch(error => {
-                setState({ isLoding: false });
-                props.orderServiceError(error);
-            });
-    }
+            {/* terms */}
+            <Checkbox
+              value="accept_terms"
+              {...accept_terms}
+              colorScheme="blue"
+              _icon={{borderRadius: 5}}
+              borderRadius={5}
+              size="sm"
+              color="gray.300">
+              I agree on terms & conditions
+            </Checkbox>
 
-    async function move_orders() {
-        await props.reset();
-        await props.productReset();
-        props.navigation.navigate('myOrders');
-    }
+            {/* total ammount */}
+            <Text color="gray.600" mt="20px" fontSize="md">
+              Total Amount : <Text color="teal.600">$50.00</Text>
+            </Text>
 
-    place_prescription_order = async (payment_mode) => {
-        setState({ isLoding: true });
-        props.orderServicePending();
-        await axios({
-            method: 'post',
-            url: api_url + order_generation,
-            data: { customer_id: global.id, payment_mode: payment_mode, prescription_id: state.prescription_id }
-        })
-            .then(async response => {
-                setState({ isLoding: false });
-                await props.orderServiceSuccess(response.data);
-                if (response.data.status == 1) {
-                    await move_orders();
-                } else {
-                    alert(response.data.message);
-                }
-            })
-            .catch(error => {
-                setState({ isLoding: false });
-                props.orderServiceError(error);
-            });
-    }
-
-    async function select_payment_method(payment_mode) {
-        if (state.from == "prescription") {
-            if (payment_mode == 1 || payment_mode == 3) {
-                await place_prescription_order(payment_mode);
-            } else {
-                var options = {
-                    currency: global.currency_short_code,
-                    key: global.razorpay_key,
-                    amount: state.prescription_total * 100,
-                    name: global.application_name,
-                    prefill: {
-                        email: global.email,
-                        contact: global.phone_number,
-                        name: global.customer_name
-                    },
-                    theme: { color: colors.theme_fg }
-                }
-                RazorpayCheckout.open(options).then((data) => {
-                    place_prescription_order(payment_mode);
-                }).catch((error) => {
-                    alert('Your transaction is declined');
-                });
-            }
-        } else {
-            if (payment_mode == 1 || payment_mode == 3) {
-                await place_order(payment_mode);
-            } else {
-                var options = {
-                    currency: global.currency_short_code,
-                    key: global.razorpay_key,
-                    amount: props.total * 100,
-                    name: global.application_name,
-                    prefill: {
-                        email: global.email,
-                        contact: global.phone_number,
-                        name: global.customer_name
-                    },
-                    theme: { color: colors.theme_fg }
-                }
-                RazorpayCheckout.open(options).then((data) => {
-                    // handle success
-                    //alert(`Success: ${data.razorpay_payment_id}`);
-                    place_order(payment_mode);
-                }).catch((error) => {
-                    alert('Your transaction is declined.');
-                    //alert(JSON.stringify(error));
-                    // handle failure
-                    //alert(`Error: ${error.code} | ${error.description}`);
-                });
-            }
-        }
-    }
-
-
-
-    const { isLoding, payment_modes } = props
-
-    return (
-        <Container>
-            <View>
-                <View style={styles.pay_style1}>
-                    <TouchableOpacity style={styles.pay_style2} onPress={handleBackButtonClick} activeOpacity={1} >
-                        <Icon onPress={handleBackButtonClick} style={styles.pay_style3} name='arrow-back' />
-                    </TouchableOpacity>
-                    <View style={styles.pay_style4} />
-                    <Text style={styles.pay_style5}>Payment</Text>
-                </View>
-            </View>
-            <View style={styles.pay_style6} />
-            <View style={styles.pay_style7} >
-                {payment_modes.map((row) => (
-                    <Text style={styles.pay_style8} onPress={() => select_payment_method(row.id)} >{row.payment_name}</Text>
-                ))}
-            </View>
-            <Loader visible={isLoding} />
-            <Loader visible={state.isLoding} />
-        </Container>
-    );
+            {/* btn */}
+            <Button
+              mt="20px"
+              bg="amber.500"
+              borderRadius={10}
+              shadow={1}
+              _text={{fontSize: 18, fontWeight: 'medium'}}
+              onPress={() => setPaymentSent(true)}>
+              Confirm
+            </Button>
+          </ScrollView>
+        </Box>
+      </Box>
+    </Box>
+  );
 }
 
-function mapStateToProps(state) {
-    return {
-        isLoding: state.payment.isLoding,
-        error: state.payment.error,
-        data: state.payment.data,
-        message: state.payment.message,
-        status: state.payment.status,
-        payment_modes: state.payment.payment_modes,
-        delivery_date: state.cart.delivery_date,
-        total: state.cart.total_amount,
-        sub_total: state.cart.sub_total,
-        tax: state.cart.tax,
-        current_vendor: state.cart.current_vendor,
-        delivery_charge: state.cart.delivery_charge,
-        discount: state.cart.promo_amount,
-        promo_id: state.cart.promo_id,
-        items: state.product.cart_items
-    };
+function PaymentSent({setPaymentSent}) {
+  const navigation = useNavigation();
+  return (
+    <Box flex={1} bg="gray.50">
+      {/* header */}
+      <PageHeader
+        label="PAYMENT"
+        iconColor="#000"
+        textColor="#000"
+        onBackPress={() => navigation.goBack()}
+      />
+
+      <ScrollView flex={1} mt="10px" px="10px">
+        <Center>
+          {/* check icon */}
+          <Ionicons name="md-checkmark-circle" size={150} color="#5F67EC" />
+
+          <Text fontSize="lg" color="black" mt="20px">
+            Payment Sent Successfully
+          </Text>
+        </Center>
+
+        {/* payment infos */}
+        <Box
+          mt="50px"
+          rounded="xl"
+          borderColor="gray.200"
+          shadow={1}
+          p="10px"
+          px="20px"
+          w="full"
+          bg="white">
+          {/* titles */}
+          <Flex direction="row" align="center">
+            <Text fontSize="sm" flex={2} color="gray.500">
+              Item
+            </Text>
+            <Text fontSize="sm" flex={2} color="gray.500">
+              Duration
+            </Text>
+            <Text fontSize="sm" flex={2} color="gray.500">
+              Time
+            </Text>
+            <Text fontSize="sm" flex={1} color="gray.500">
+              Price
+            </Text>
+          </Flex>
+          {/* divider */}
+          <Box w="full" h="2px" bg="teal.600" my="5px" />
+
+          {/* data */}
+          <Flex direction="row" align="flex-start" minH="100px">
+            <Text fontSize="sm" flex={2} color="gray.500">
+              Item name test text here BeTMENA
+            </Text>
+            <Text fontSize="sm" flex={2} color="gray.500">
+              60 min
+            </Text>
+            <Text fontSize="sm" flex={2} color="gray.500">
+              15-5-2022 15:00
+            </Text>
+            <Text fontSize="sm" flex={1} color="gray.500">
+              $50.00
+            </Text>
+          </Flex>
+
+          {/* divider */}
+          <Box w="full" h="2px" bg="teal.600" my="5px" />
+
+          <Flex direction="row" align="center" justify="flex-end">
+            <Text fontSize="lg" color="gray.500">
+              Total $50.00
+            </Text>
+          </Flex>
+        </Box>
+
+        {/* done btn */}
+        <Button
+          mt="50px"
+          bg="amber.500"
+          borderRadius={10}
+          shadow={1}
+          _text={{fontSize: 18, fontWeight: 'medium'}}
+          onPress={() => setPaymentSent(false)}>
+          Done
+        </Button>
+      </ScrollView>
+    </Box>
+  );
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    orderServicePending: () => dispatch(orderServicePending()),
-    orderServiceError: (error) => dispatch(orderServiceError(error)),
-    orderServiceSuccess: (data) => dispatch(orderServiceSuccess(data)),
-    paymentListPending: () => dispatch(paymentListPending()),
-    paymentListError: (error) => dispatch(paymentListError(error)),
-    paymentListSuccess: (data) => dispatch(paymentListSuccess(data)),
-    reset: () => dispatch(reset()),
-    productReset: () => dispatch(productReset())
-});
+function CustomInput({label, w, placeholder, value, onChangeText, ...props}) {
+  return (
+    <Box w={w}>
+      <Text color="gray.500" ml="10px" mb="5px">
+        {label ?? placeholder}
+      </Text>
+      <Input
+        placeholder={placeholder}
+        marginTop={0}
+        borderColor="gray.200"
+        borderWidth={1.5}
+        borderRadius={10}
+        color="gray.600"
+        {...props}
+      />
+    </Box>
+  );
+}
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Payment);
-
-const styles = StyleSheet.create({
-    pay_style1: { alignItems: 'flex-start', margin: 10 },
-    pay_style2: { width: 100, justifyContent: 'center' },
-    pay_style3: { color: colors.theme_fg_two, fontSize: 30 },
-    pay_style4: { margin: 5 },
-    pay_style5: { fontSize: 25, color: colors.theme_fg_two, fontFamily: font_title },
-    pay_style6: { margin: 20 },
-    pay_style7: { padding: 20 },
-    pay_style8: {
-        padding: 10,
-        color: colors.theme_fg,
-        fontSize: 16,
-        fontFamily: font_title,
-        borderBottomWidth: 1,
-        borderColor: '#a3ada6'
-    },
-});
+const styles = StyleSheet.create({});
