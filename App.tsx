@@ -160,17 +160,6 @@ function MyTabs() {
     );
 }
 
-function ScreenWithHeader({ name }: { name: string; }) {
-    return <AppNavigator.Screen name={name} options={{
-        header: (props) => (<PageHeader
-            label="DOCTORS"
-            iconColor="#000"
-            textColor="#000"
-            onBackPress={() => props.navigation.goBack()}
-        />)
-    }} />;
-}
-
 function App() {
     return (
         <NativeBaseProvider theme={theme}>
@@ -194,7 +183,13 @@ function App() {
 
                     {/* doctor */}
                     <AppNavigator.Screen name="doctorSubCategories" component={DoctorSubCategories} />
-                    <ScreenWithHeader name="doctorList" component={Doctors} />
+                    <AppNavigator.Screen name="doctorList" component={Doctors} options={{
+                        header: (props) => (<PageHeader
+                            label="DOCTORS"
+                            iconColor="#000"
+                            textColor="#000"
+                            onBackPress={() => props.navigation.goBack()} />)
+                    }} />
                     <AppNavigator.Screen name="doctorDetail" component={DoctorProfile} />
                     <AppNavigator.Screen name="appointmentDetail" component={AppointmentDetail} />
 
