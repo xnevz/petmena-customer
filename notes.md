@@ -1,2 +1,5 @@
 - link to terms and conditions in signup page must redirect to the appropriate page.
 - still have to fix registration logic.
+- emergency doctors need to be fetched.
+- doctors search not implemented.
+- add lagnuage screen.

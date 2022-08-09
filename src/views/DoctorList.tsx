@@ -1,7 +1,11 @@
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Container, List, Box, Icon, Image } from 'native-base';
-import { img_url, api_url, get_doctor_by_specialists, get_doctor_by_ratings, get_doctor_by_services, font_title, doctor_list } from '../config/Constants';
+import {
+    img_url, api_url, doctors_list_path,
+    get_doctor_by_ratings, get_doctor_by_services,
+    font_title, doctor_list
+} from '../config/Constants';
 import * as colors from "../assets/css/Colors";
 import axios from 'axios';
 import { Loader } from '../components/GeneralComponents';
@@ -18,39 +22,16 @@ export default function DoctorList(props) {
         api_status: 0,
         isLoding: false
     });
+
+
+
     function setState(mstate) {
         msetState({ ...state, ...mstate });
     }
 
-    async function get_doctors() {
-        if (state.type == 1) {
-            await get_doctors_by_category();
-        } else if (state.type == 2) {
-            await get_doctors_by_symptoms();
-        } else if (state.type == 3) {
-            await get_doctors_by_ratings();
-        }
-    };
-
-    useEffect(() => {
-        get_doctors();
-    }, []);
-
-    async function get_doctors_by_category() {
-        setState({ isLoding: true });
-        await axios({
-            method: "post",
-            url: api_url + get_doctor_by_specialists,
-            data: { specialist: state.id, specialist_sub_category: state.sub_id }
-        })
-            .then(async (response) => {
-                setState({ isLoding: false, api_status: 1 });
-                setState({ result: response.data.result })
-            })
-            .catch((error) => {
-                setState({ isLoding: false });
-                alert('Something went wrong');
-            });
+    async function getDoctors() {
+        const result = await axios.post(doctors_list_path);
+        
     }
 
     async function get_doctors_by_symptoms() {
@@ -63,7 +44,7 @@ export default function DoctorList(props) {
             .then(async (response) => {
                 setState({ isLoding: false, api_status: 1 });
                 console.log(response.data.result);
-                setState({ result: response.data.result })
+                setState({ result: response.data.result });
             })
             .catch((error) => {
                 setState({ isLoding: false });
@@ -79,7 +60,7 @@ export default function DoctorList(props) {
         })
             .then(async (response) => {
                 setState({ isLoding: false, api_status: 1 });
-                setState({ result: response.data.result })
+                setState({ result: response.data.result });
             })
             .catch((error) => {
                 setState({ isLoding: false });
@@ -96,7 +77,7 @@ export default function DoctorList(props) {
         })
             .then(async (response) => {
                 setState({ isLoding: false, api_status: 1 });
-                setState({ result: response.data.result })
+                setState({ result: response.data.result });
             })
             .catch((error) => {
                 setState({ isLoding: false });

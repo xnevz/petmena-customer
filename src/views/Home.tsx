@@ -1,17 +1,19 @@
 import axios from 'axios';
-import { Box, Button, Flex, Image, ScrollView, Text, View } from 'native-base';
+import { Box, Button, Flex, Image, ScrollView, Text, View, FlatList } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, useWindowDimensions } from 'react-native';
+import { ImageBackground, NativeScrollEvent, NativeSyntheticEvent, SafeAreaView, StyleSheet, useWindowDimensions } from 'react-native';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { useAppNavigation } from '../../App';
 import * as colors from '../assets/css/Colors';
 import Background from '../components/Background';
-import { font_description, font_title, home_details, img_url } from '../config/Constants';
-import { Banner, Category, Doctor, HomeDetailsResponse, Symptom } from '../serverResponses';
-import ButtonImage from '../assets/css/tabBarButton.svg';
+import { my_bookings_path, font_description, font_title, home_details, img_url } from '../config/Constants';
+import { Banner, Category, HomeDetailsResponse, Symptom } from '../serverResponses';
 import AppointmentAbstract from '../components/AppointmentAbstract';
 import dogFood from '../assets/img/dogFood.png';
 import dogContract from '../assets/img/dogContract.png';
+import { Booking } from '../serverResponses/bookings';
+import { SingleListResponse } from '../serverResponses';
+import { Doctor } from '../serverResponses/doctors';
 
 export default function Home() {
     const navigation = useAppNavigation();
@@ -20,6 +22,7 @@ export default function Home() {
     const [symptomsFirst, setSymptomsFirst] = useState<Symptom[]>([]);
     const [symptomsSecond, setSymptomsSecond] = useState<Symptom[]>([]);
     const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const [myBookings, setMyBookings] = useState<Booking[] | null>(null);
 
     const wDims = useWindowDimensions();
     const [carouselIndex, setCarouselIndex] = useState(0);
@@ -38,17 +41,22 @@ export default function Home() {
             setSymptomsFirst(result.data.result.symptoms_first);
             setSymptomsSecond(result.data.result.symptoms_second);
         } catch (error) {
+            // TODO : handle error here
+        }
 
+        try {
+            const bookings_result = await axios.post<SingleListResponse<Booking>>(my_bookings_path, {
+                'customer_id': global.id
+            });
+            setMyBookings(bookings_result.data.result.splice(0, 10));
+        } catch (error) {
+            setMyBookings([]);
         }
 
     };
 
     function goToDoctorsByCategory(id: number, category_name: string) {
         navigation.navigate('doctorSubCategories', { id, type: 1, category_name });
-    }
-
-    function goToDoctorList(id: number, type: number) {
-        navigation.navigate('doctorList', { id, type });
     }
 
     function goToDoctorDetails(doctor: Doctor) {
@@ -68,9 +76,6 @@ export default function Home() {
         const val = offset / wDims.width;
         const round = Math.round(val);
 
-        if (Math.abs(round - val) > 0.001)
-            return;
-
         setCarouselIndex(round);
     }
 
@@ -80,9 +85,9 @@ export default function Home() {
 
             {/* carousel */}
             <View style={{ flexDirection: 'row' }}>
-                <ScrollView mx={5} scrollEventThrottle={200}
+                <ScrollView mx={5}
                     onScroll={onCarouselScroll}
-                    decelerationRate={0.001}
+                    decelerationRate={1}
                     pagingEnabled={true}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}>
@@ -98,16 +103,19 @@ export default function Home() {
 
             {/* carousel dots */}
             <Box alignSelf='center' display='flex' flexDirection='row' m={2} backgroundColor='white' rounded='sm' p={1}>
-                {banners?.map((banner, index) => {
+                {banners?.map((_, index) => {
                     return (<Box key={index} style={{ backgroundColor: (index == carouselIndex ? '#0007' : '#0002') }} rounded='2xl' width={2} height={2} m={1} />);
                 })}
             </Box>
 
             <Text textTransform='uppercase' mt={2} fontSize='2xl' alignSelf='center'>Choose your need</Text>
-            
+
             {/* big buttons */}
             <Flex direction='row' mx={10} mb={-60} mt={-3} zIndex={1}>
-                <Button shadow='9' px={30} rounded='2xl' m={0} py={7} p={0} flex={1}>
+                <Button shadow='9'
+                    onPress={() => navigation.navigate('doctorList')}
+                    px={30} rounded='2xl' m={0}
+                    py={7} p={0} flex={1}>
                     <Flex align='center'>
                         <Image source={dogFood} mb={5} />
                         <Text fontSize='lg' color={colors.primary} textTransform='uppercase' fontWeight='bold'>Doctors</Text>
@@ -133,15 +141,13 @@ export default function Home() {
                     <Text color={colors.primary} fontWeight='light' flex={1} textTransform='uppercase'>Appointment List</Text>
                     <Text color={colors.primary} fontWeight='light' alignSelf='flex-end' textTransform='uppercase'>See all</Text>
                 </Flex>
-                <View>
-                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
-                    <AppointmentAbstract name='Appointment' description='With doctor maotazWith doctor maotazWith doctor maotaz' />
-                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
-                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
-                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
-                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
-                    <AppointmentAbstract name='Appointment' description='With doctor maotaz' />
-                </View>
+                {myBookings == null && <Text alignSelf='center' color={colors.primary}>Loading ...</Text>}
+                {myBookings !== null && myBookings.length == 0 && <Text alignSelf='center' color={colors.primary}>No Appointments</Text>}
+                <SafeAreaView style={{flex: 1}}>
+                    <FlatList data={myBookings} renderItem={
+                        ({ item }) => <AppointmentAbstract name={item.title} description={item.description} />
+                    } keyExtractor={(b) => b.id.toString()} />
+                </SafeAreaView>
             </View>
 
         </Background>

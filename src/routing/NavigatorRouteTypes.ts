@@ -1,4 +1,4 @@
-import { Doctor } from "../serverResponses";
+import { Doctor } from "../serverResponses/doctors";
 
 export type NavigatorRouteTypes = {
     login: undefined;
@@ -10,10 +10,7 @@ export type NavigatorRouteTypes = {
         type: number;
         category_name: string;
     };
-    doctorList: {
-        id: number;
-        type: number;
-    };
+    doctorList: undefined;
     doctorDetail: {
         doctor: Doctor;
     },

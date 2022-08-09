@@ -1,16 +1,10 @@
+import { Doctor } from "./doctors";
 
 export interface ResultResponse {
     result: any,
     message: string,
     status: Number,
 }
-
-export interface Doctor {
-    profile_image: string,
-    doctor_name: string,
-    specialist: string,
-    overall_rating: number;
-};
 
 export interface Category {
     id: number;
@@ -37,4 +31,8 @@ export interface HomeDetailsResponse {
         symptoms_second: Symptom[],
         doctors: Doctor[];
     };
+}
+
+export interface SingleListResponse<T> {
+    result: T[];
 }

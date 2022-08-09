@@ -1,9 +1,9 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer, NavigationProp} from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from './src/assets/css/Colors';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 /* Screens */
 import Splash from './src/views/Splash';
@@ -52,9 +52,9 @@ import Chat from './src/views/Chat';
 import { NativeBaseProvider, View } from 'native-base';
 import Home from './src/views/Home';
 import Header from './src/components/Header';
-import {theme} from './src/assets/css/theme';
-import {NavigatorRouteTypes} from './src/routing/NavigatorRouteTypes';
-import {useNavigation} from '@react-navigation/native';
+import { theme } from './src/assets/css/theme';
+import { NavigatorRouteTypes } from './src/routing/NavigatorRouteTypes';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { api_url } from './src/config/Constants';
 import BottomBar from './src/components/BottomBar';
@@ -64,29 +64,29 @@ import Doctors from './src/views/Doctors';
 import DoctorProfile from './src/views/DoctorProfile';
 import Coaches from './src/views/Coaches';
 import Trainings from './src/views/Trainings';
-
+import PageHeader from './src/components/PageHeader';
 
 export const AppNavigator = createStackNavigator();
 export const useAppNavigation = () =>
-  useNavigation<NavigationProp<NavigatorRouteTypes>>();
+    useNavigation<NavigationProp<NavigatorRouteTypes>>();
 
 const Tab = createBottomTabNavigator();
 
 declare global {
-  var currency: string;
-  var currency_short_code: string;
-  var application_name: string;
-  var razorpay_key: string;
-  var delivery_charge: string;
-  var free_delivery_amount: number;
-  var admin_phone: string;
-  var admin_email: string;
-  var admin_address: string;
-  var fcm_token: string;
-  var id: number;
-  var customer_name: string;
-  var phone_number: string;
-  var email: string;
+    var currency: string;
+    var currency_short_code: string;
+    var application_name: string;
+    var razorpay_key: string;
+    var delivery_charge: string;
+    var free_delivery_amount: number;
+    var admin_phone: string;
+    var admin_email: string;
+    var admin_address: string;
+    var fcm_token: string;
+    var id: number;
+    var customer_name: string;
+    var phone_number: string;
+    var email: string;
 }
 
 axios.defaults.baseURL = api_url;
@@ -160,6 +160,17 @@ function MyTabs() {
     );
 }
 
+function ScreenWithHeader({ name }: { name: string; }) {
+    return <AppNavigator.Screen name={name} options={{
+        header: (props) => (<PageHeader
+            label="DOCTORS"
+            iconColor="#000"
+            textColor="#000"
+            onBackPress={() => props.navigation.goBack()}
+        />)
+    }} />;
+}
+
 function App() {
     return (
         <NativeBaseProvider theme={theme}>
@@ -183,13 +194,13 @@ function App() {
 
                     {/* doctor */}
                     <AppNavigator.Screen name="doctorSubCategories" component={DoctorSubCategories} />
-                    <AppNavigator.Screen name="doctorList" component={DoctorList} />
-                    <AppNavigator.Screen name="doctorDetail" component={DoctorDetail} />
+                    <ScreenWithHeader name="doctorList" component={Doctors} />
+                    <AppNavigator.Screen name="doctorDetail" component={DoctorProfile} />
                     <AppNavigator.Screen name="appointmentDetail" component={AppointmentDetail} />
-                    
+
                     <AppNavigator.Screen name="productDetails" component={ProductDetails} />
 
-          {/* 
+                    {/* 
                     <AppNavigator.Screen name="addPrescription" component={AddPrescription} />
                     <AppNavigator.Screen name="address" component={Address} />
                     <AppNavigator.Screen name="addressList" component={AddressList} />
@@ -217,50 +228,50 @@ function App() {
                     <AppNavigator.Screen name="subCategory" component={SubCategory} />
                     <AppNavigator.Screen name="viewPrescription" component={ViewPrescription} />
                 */}
-          <AppNavigator.Screen
-            name="profile"
-            component={Profile}
-            options={{headerShown: false}}
-          />
-          <AppNavigator.Screen
-            name="pets_list"
-            component={PetsList}
-            options={{headerShown: false}}
-          />
-          <AppNavigator.Screen
-            name="add_pet"
-            component={AddPet}
-            options={{headerShown: false}}
-          />
-          <AppNavigator.Screen
-            name="doctors"
-            component={Doctors}
-            options={{headerShown: false}}
-          />
-          <AppNavigator.Screen
-            name="doctor_profile"
-            component={DoctorProfile}
-            options={{headerShown: false}}
-          />
-          <AppNavigator.Screen
-            name="coaches"
-            component={Coaches}
-            options={{headerShown: false}}
-          />
-          <AppNavigator.Screen
-            name="trainings"
-            component={Trainings}
-            options={{headerShown: false}}
-          />
-          {/* <AppNavigator.Screen name="category" component={Category} />
+                    <AppNavigator.Screen
+                        name="profile"
+                        component={Profile}
+                        options={{ headerShown: false }}
+                    />
+                    <AppNavigator.Screen
+                        name="pets_list"
+                        component={PetsList}
+                        options={{ headerShown: false }}
+                    />
+                    <AppNavigator.Screen
+                        name="add_pet"
+                        component={AddPet}
+                        options={{ headerShown: false }}
+                    />
+                    <AppNavigator.Screen
+                        name="doctors"
+                        component={Doctors}
+                        options={{ headerShown: false }}
+                    />
+                    <AppNavigator.Screen
+                        name="doctor_profile"
+                        component={DoctorProfile}
+                        options={{ headerShown: false }}
+                    />
+                    <AppNavigator.Screen
+                        name="coaches"
+                        component={Coaches}
+                        options={{ headerShown: false }}
+                    />
+                    <AppNavigator.Screen
+                        name="trainings"
+                        component={Trainings}
+                        options={{ headerShown: false }}
+                    />
+                    {/* <AppNavigator.Screen name="category" component={Category} />
                     <AppNavigator.Screen name="vendorDetails" component={VendorDetails} />
                     <AppNavigator.Screen name="search" component={Search} />
                     <AppNavigator.Screen name="createAppointment" component={CreateAppointment} />
                      */}
-        </AppNavigator.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
-  );
+                </AppNavigator.Navigator>
+            </NavigationContainer>
+        </NativeBaseProvider>
+    );
 }
 
 export default App;

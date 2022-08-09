@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import { Container, List, ListItem, Col, Tab, Tabs, TabHeading, Icon, Thumbnail } from 'native-base';
-import { api_url, my_orders, tablet, img_url, font_title, font_description, no_appointment_lottie, no_orders_lottie } from '../config/Constants';
+import { api_url, my_bookings_path, tablet, img_url, font_title, font_description, no_appointment_lottie, no_orders_lottie } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import { Loader } from '../components/GeneralComponents';
 import Moment from 'moment';
